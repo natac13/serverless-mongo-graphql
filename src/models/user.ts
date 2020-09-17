@@ -1,4 +1,4 @@
-import { Document, Schema, model, connection, Model } from 'mongoose'
+import mongoose, { Document, Schema, Model } from 'mongoose'
 
 interface IUser extends Document {
   _id: string
@@ -36,9 +36,9 @@ const UserSchema = new Schema({
 let UserModel: Model<IUser, {}>
 
 try {
-  UserModel = connection.model<IUser>('User')
+  UserModel = mongoose.connection.model<IUser>('User')
 } catch (err) {
-  UserModel = model<IUser>('User', UserSchema)
+  UserModel = mongoose.model<IUser>('User', UserSchema)
 }
 
 export default UserModel
