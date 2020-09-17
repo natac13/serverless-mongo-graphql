@@ -1,4 +1,4 @@
-import UserModel, { IUserInput } from '../models/user'
+import UserModel from '../models/user'
 import { Resolvers } from '../types/resolver-types'
 
 const resolvers: Resolvers = {
@@ -14,7 +14,7 @@ const resolvers: Resolvers = {
   },
   Mutation: {
     createUser: async (_, args) => {
-      const newUser = await UserModel.create<IUserInput>(args.User)
+      const newUser = await UserModel.create(args.User)
       return newUser
     },
     updateUser: async (_, args) => {

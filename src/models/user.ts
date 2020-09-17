@@ -1,44 +1,32 @@
-import mongoose, { Document, Schema, Model } from 'mongoose'
+import mongoose, { Model } from 'mongoose'
+import {
+  prop as Prop,
+  modelOptions,
+  getModelForClass,
+  DocumentType
+} from '@typegoose/typegoose'
 
-interface IUser extends Document {
-  _id: string
-  name: string
-  email: string
-  position?: string
-  employeeId?: number
+@modelOptions({ options: { customName: 'User' } })
+export class UserSchema {
+  @Prop({ required: true })
+  public name!: string
+
+  @Prop({ required: true, index: true })
+  public email!: string
+
+  @Prop()
+  public position?: string
+
+  @Prop()
+  public employeeId?: number
 }
 
-export interface IUserInput {
-  name: IUser['name']
-  email: IUser['email']
-  position?: IUser['position']
-  employeeId?: IUser['employeeId']
-}
-
-const UserSchema = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    index: true
-  },
-  position: {
-    type: String
-  },
-  employeeId: {
-    type: Number
-  }
-})
-
-let UserModel: Model<IUser, {}>
+let UserModel: Model<DocumentType<UserSchema>, {}>
 
 try {
-  UserModel = mongoose.connection.model<IUser>('User')
+  UserModel = mongoose.connection.model('User')
 } catch (err) {
-  UserModel = mongoose.model<IUser>('User', UserSchema)
+  UserModel = getModelForClass(UserSchema)
 }
 
 export default UserModel

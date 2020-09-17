@@ -12,10 +12,11 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@typegoose/typegoose": "^7.4.0",
     "apollo-server-lambda": "^2.17.0",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
-    "mongoose": "^5.9.24",
+    "mongoose": "^5.10.5",
     "serverless": "^2.1.0",
     "source-map-support": "^0.5.10"
   },
