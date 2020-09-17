@@ -1,4 +1,4 @@
-import { connect, set } from 'mongoose'
+import mongoose from 'mongoose'
 
 import { IS_PROD, IS_DEV } from './constants'
 
@@ -19,23 +19,26 @@ const options = {
 }
 
 interface ConnectToDB {
-  (): Promise<typeof import('mongoose')>
+  (): Promise<typeof mongoose>
 }
 
-const connectToDB: ConnectToDB = async () => {
-  try {
-    const connection = await connect(process.env.MONGO_URI, options)
+let cachedDb: typeof mongoose | null = null
 
-    if (IS_DEV) {
-      set('debug', true)
-      console.log(`⌨️  Dev Server Connected to Dev Database 🏬`)
-    } else if (IS_PROD) {
-      console.log(`💻 Production Server Connected to Prod Database 🏬`)
-    }
-    return connection
-  } catch (error) {
-    console.log(error)
-    return Promise.reject(error)
+const connectToDB: ConnectToDB = async () => {
+  if (cachedDb === null) {
+    return mongoose.connect(process.env.MONGO_URI, options).then((db) => {
+      cachedDb = db
+      if (IS_DEV) {
+        mongoose.set('debug', true)
+        console.log(`⌨️  Dev Server Connected to Dev Database 🏬`)
+      } else if (IS_PROD) {
+        console.log(`💻 Production Server Connected to Prod Database 🏬`)
+      }
+      return db
+    })
+  } else {
+    console.log(`♻️ DB Connection`)
+    return Promise.resolve(cachedDb)
   }
 }
 

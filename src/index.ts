@@ -1,15 +1,13 @@
 import { ApolloServer } from 'apollo-server-lambda'
-import dbConnection from './dbConnection'
 import { IS_DEV } from './constants'
 import resolvers from './resolvers'
 import typeDefs from './schema'
 import { APIGatewayProxyHandler } from 'aws-lambda'
+import connectToDB from './dbConnection'
 
 if (IS_DEV) {
   require('dotenv').config()
 }
-
-let cachedDb = null
 
 const apolloContext = async ({ event, context }) => {
   return {
@@ -34,22 +32,11 @@ const server = new ApolloServer({
 export const handler: APIGatewayProxyHandler = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false
 
-  try {
-    if (!cachedDb) {
-      /* Connect to Database */
-      dbConnection().then((db) => {
-        cachedDb = db
-      })
-    }
-
-    const handlerFunction = server.createHandler({
+  connectToDB().then(() => {
+    server.createHandler({
       cors: {
         origin: '*'
       }
-    })
-
-    return handlerFunction(event, context, callback)
-  } catch (err) {
-    console.log(err)
-  }
+    })(event, context, callback)
+  })
 }
