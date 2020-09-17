@@ -1,9 +1,8 @@
-import mongoose, { Model } from 'mongoose'
+import mongoose from 'mongoose'
 import {
   prop as Prop,
   modelOptions,
-  getModelForClass,
-  DocumentType
+  getModelForClass
 } from '@typegoose/typegoose'
 
 @modelOptions({ options: { customName: 'User' } })
@@ -21,12 +20,6 @@ export class UserSchema {
   public employeeId?: number
 }
 
-let UserModel: Model<DocumentType<UserSchema>, {}>
-
-try {
-  UserModel = mongoose.connection.model('User')
-} catch (err) {
-  UserModel = getModelForClass(UserSchema)
-}
+const UserModel = getModelForClass(UserSchema, { existingMongoose: mongoose })
 
 export default UserModel
