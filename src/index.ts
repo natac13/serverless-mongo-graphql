@@ -19,20 +19,23 @@ const apolloContext = async ({ event, context }) => {
 const server = new ApolloServer({
   schema: graphqlSchema,
   context: apolloContext,
-  playground: {
-    settings: {
-      // 'request.credentials': 'include',
-      'editor.fontSize': 16,
-      // @ts-ignore
-      'schema.polling.enable': false,
-      'schema.polling.interval': 60000
-    }
-  }
+  introspection: true,
+  playground: IS_DEV
+    ? {
+        settings: {
+          // 'request.credentials': 'include',
+          'editor.fontSize': 16,
+          // @ts-ignore
+          'schema.polling.enable': false,
+          'schema.polling.interval': 60000
+        }
+      }
+    : false
 })
 
 export const handler: APIGatewayProxyHandler = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false
-
+  console.log(event, context)
   connectToDB().then(() => {
     server.createHandler({
       cors: {

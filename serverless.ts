@@ -2,7 +2,7 @@ import type { Serverless } from 'serverless/aws'
 
 const serverlessConfiguration: Serverless = {
   service: {
-    name: 'severlessmongographql'
+    name: 'lambdamongographql'
     // app and org for use with dashboard.serverless.com
     // app: your-app-name,
     // org: your-org-name,
@@ -44,7 +44,7 @@ const serverlessConfiguration: Serverless = {
   functions: {
     graphql: {
       handler: 'src/index.handler',
-      name: 'Graphql-server',
+      name: 'example-graphql-mongodb',
       events: [
         {
           httpApi: {
