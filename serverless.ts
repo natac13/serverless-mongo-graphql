@@ -30,7 +30,8 @@ const serverlessConfiguration: Serverless = {
       minimumCompressionSize: 1024
     },
     environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      MONGO_URI: '${ssm:/TestCluster.MONGO_URI}'
     },
     httpApi: {
       payload: '1.0',
@@ -43,7 +44,7 @@ const serverlessConfiguration: Serverless = {
   functions: {
     graphql: {
       handler: 'src/index.handler',
-      name: 'Graphql server',
+      name: 'Graphql-server',
       events: [
         {
           httpApi: {
