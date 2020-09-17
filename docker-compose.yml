@@ -1,0 +1,50 @@
+version: '2.4'
+
+services:
+  mongo1:
+    image: mongo:4.4.0-bionic
+    volumes:
+      - mongoDB:/data/db
+    restart: on-failure
+    command: --bind_ip_all --replSet rs1
+    ports:
+      - 27017:27017
+    networks:
+      - mongo
+  mongo2:
+    image: mongo:4.4.0-bionic
+    volumes:
+      - mongoDB2:/data/db
+    restart: on-failure
+    command: --bind_ip_all --replSet rs1
+    ports:
+      - 27018:27017
+    networks:
+      - mongo
+  mongo3:
+    image: mongo:4.4.0-bionic
+    volumes:
+      - mongoDB3:/data/db
+    restart: on-failure
+    command: --bind_ip_all --replSet rs1
+    ports:
+      - 27019:27017
+    networks:
+      - mongo
+  mongosetup:
+    image: mongo:4.4.0-bionic
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    volumes:
+      - ./dbsetup.sh:/scripts/dbsetup.sh
+    entrypoint: ['/scripts/dbsetup.sh']
+    networks:
+      - mongo
+networks:
+  mongo:
+volumes:
+  mongoDB:
+  mongoDB2:
+  mongoDB3:
