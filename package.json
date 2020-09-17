@@ -7,23 +7,20 @@
     "start": "sls offline",
     "lint": "eslint . --ext js,ts --cache --fix",
     "prettier": "prettier --list-different './**/*.{js,ts}'",
-    "ts:check": "tsc --noEmit",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "gen": "graphql-codegen --config codegen.yml"
+    "ts:check": "tsc --noEmit"
   },
   "dependencies": {
     "@typegoose/typegoose": "^7.4.0",
     "apollo-server-lambda": "^2.17.0",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
+    "graphql-compose": "^7.21.1",
+    "graphql-compose-mongoose": "^8.0.3",
     "mongoose": "^5.10.5",
     "serverless": "^2.1.0",
     "source-map-support": "^0.5.10"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "1.17.8",
-    "@graphql-codegen/typescript": "1.17.8",
-    "@graphql-codegen/typescript-resolvers": "1.17.8",
     "@types/aws-lambda": "^8.10.17",
     "@types/mongoose": "^5.7.36",
     "@types/node": "^10.12.18",

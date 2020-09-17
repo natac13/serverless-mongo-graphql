@@ -1,35 +1,29 @@
+import { composeWithMongoose } from 'graphql-compose-mongoose'
+import { schemaComposer } from 'graphql-compose'
 import UserModel from '../models/user'
-import { Resolvers } from '../types/resolver-types'
 
-const resolvers: Resolvers = {
-  Query: {
-    getUser: async (_, args) => {
-      const User = await UserModel.findById(args._id, {}, { lean: true })
-      return User
-    },
-    allUsers: async (_, args) => {
-      const users = await UserModel.find(args, {}, { lean: true })
-      return users
-    }
-  },
-  Mutation: {
-    createUser: async (_, args) => {
-      const newUser = await UserModel.create(args.User)
-      return newUser
-    },
-    updateUser: async (_, args) => {
-      const updatedUser = await UserModel.findByIdAndUpdate(
-        args._id,
-        args.Updates,
-        { lean: true, projection: {} }
-      )
-      return updatedUser
-    },
-    deleteUser: async (_, args) => {
-      await UserModel.findByIdAndDelete(args._id)
-      return true
-    }
-  }
-}
+const UserTC = composeWithMongoose(UserModel, {})
 
-export default resolvers
+// STEP 3: Add needed CRUD User operations to the GraphQL Schema
+// via graphql-compose it will be much much easier, with less typing
+schemaComposer.Query.addFields({
+  userById: UserTC.getResolver('findById'),
+  userByIds: UserTC.getResolver('findByIds'),
+  userOne: UserTC.getResolver('findOne'),
+  userMany: UserTC.getResolver('findMany'),
+  userCount: UserTC.getResolver('count')
+})
+
+schemaComposer.Mutation.addFields({
+  userCreateOne: UserTC.getResolver('createOne'),
+  userCreateMany: UserTC.getResolver('createMany'),
+  userUpdateById: UserTC.getResolver('updateById'),
+  userUpdateOne: UserTC.getResolver('updateOne'),
+  userUpdateMany: UserTC.getResolver('updateMany'),
+  userRemoveById: UserTC.getResolver('removeById'),
+  userRemoveOne: UserTC.getResolver('removeOne'),
+  userRemoveMany: UserTC.getResolver('removeMany')
+})
+
+const graphqlSchema = schemaComposer.buildSchema()
+export default graphqlSchema

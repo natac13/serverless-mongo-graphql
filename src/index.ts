@@ -1,9 +1,8 @@
 import { ApolloServer } from 'apollo-server-lambda'
 import { IS_DEV } from './constants'
-import resolvers from './resolvers'
-import typeDefs from './schema'
 import { APIGatewayProxyHandler } from 'aws-lambda'
 import connectToDB from './dbConnection'
+import graphqlSchema from './resolvers'
 
 if (IS_DEV) {
   require('dotenv').config()
@@ -18,8 +17,7 @@ const apolloContext = async ({ event, context }) => {
 
 /* Apollo Graphql Setup */
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema: graphqlSchema,
   context: apolloContext,
   playground: {
     settings: {
