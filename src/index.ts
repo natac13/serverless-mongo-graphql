@@ -24,7 +24,10 @@ const server = new ApolloServer({
   playground: {
     settings: {
       // 'request.credentials': 'include',
-      'editor.fontSize': 16
+      'editor.fontSize': 16,
+      // @ts-ignore
+      'schema.polling.enable': false,
+      'schema.polling.interval': 60000
     }
   }
 })
