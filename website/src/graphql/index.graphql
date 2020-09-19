@@ -1,0 +1,8 @@
+query GetUserMany {
+  userMany {
+    name
+    email
+    _id
+  }
+  userCount
+}

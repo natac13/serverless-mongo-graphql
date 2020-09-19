@@ -1,0 +1,19 @@
+service: demo-frontend-app
+
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-1
+
+plugins:
+  - serverless-finch
+
+custom:
+  client:
+    bucketName: natac-demo-frontend-app-mongo-graphql-backend
+    distributionFolder: build/
+    indexDocument: index.html
+    errorDocument: index.html
